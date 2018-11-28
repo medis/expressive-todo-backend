@@ -3,7 +3,11 @@
     "require": {
         "php": "^7.0",
         "roave/security-advisories": "dev-master",
-        "zendframework/zend-expressive": "3.2.1"
+        "zendframework/zend-expressive": "3.2.1",
+        "zendframework/zend-diactoros": "^1.7.1 || ^2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.0"
     },
     "autoload": {
         "psr-4": {
@@ -12,7 +16,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "MedisDemoTest\\": "test/"
+            "MedisDemoApp\\Tests\\": "test/"
         }
     }
 }
