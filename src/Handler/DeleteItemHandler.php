@@ -13,7 +13,7 @@ use Psr\Http\Message\ResponseInterface;
 use Ramsey\Uuid\Uuid;
 use Zend\Diactoros\Response\JsonResponse;
 
-final class UpdateItemHandler implements MiddlewareInterface
+final class DeleteItemHandler implements MiddlewareInterface
 {
     /**
      * @var EntityManagerInterface
@@ -43,27 +43,16 @@ final class UpdateItemHandler implements MiddlewareInterface
             return new JsonResponse(['info' => $itemNotFound->getMessage()], 404);
         }
 
-        $data = $request->getParsedBody();
-        $inputFilter = Item::getInputFilter();
-        $inputFilter->setData($data);
-        if (!$inputFilter->isValid()) {
-            return new JsonResponse(['info' => 'Invalid data', 422]);
-        }
-
         try {
-            $this->entityManager->transactional(function () use ($item, $inputFilter) {
-                $data = $inputFilter->getValues();
-                // @todo Figure a better way.
-                // Throws unique field error if name exists in data.
-//                unset($data['name']);
-                $item->data($data);
+            $this->entityManager->transactional(function () use ($item) {
+                $this->entityManager->remove($item);
             });
         } catch (\Exception $e) {
             return new JsonResponse(['error' => $e->getMessage()], 422);
         }
 
         return new JsonResponse([
-            'info' => sprintf('You have updated %s', $item->getName()),
+            'info' => sprintf('You have deleted %s', $item->getName()),
         ]);
     }
 }

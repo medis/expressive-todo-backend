@@ -11,6 +11,9 @@ use Zend\ServiceManager\Factory\InvokableFactory;
 
 class ConfigProvider
 {
+
+    private $uuidPattern = '\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b';
+
     public function __invoke() : array
     {
         return [
@@ -34,6 +37,7 @@ class ConfigProvider
                 Service\Item\FindItemByUuidInterface::class => Service\Item\DoctrineFindItemByUuidFactory::class,
                 Handler\CreateItemHandler::class => Handler\CreateItemHandlerFactory::class,
                 Handler\UpdateItemHandler::class => Handler\UpdateItemHandlerFactory::class,
+                Handler\DeleteItemHandler::class => Handler\DeleteItemHandlerFactory::class,
             ]
         ];
     }
@@ -82,8 +86,13 @@ class ConfigProvider
                 'allowed_methods' => ['POST']
             ],
             'item.update' => [
-                'path'            => '/item/{id:\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b}/update',
+                'path'            => sprintf('/item/{id:%s}/update', $this->uuidPattern),
                 'middleware'      => Handler\UpdateItemHandler::class,
+                'allowed_methods' => ['POST']
+            ],
+            'item.delete' => [
+                'path'            => sprintf('/item/{id:%s}/delete', $this->uuidPattern),
+                'middleware'      => Handler\DeleteItemHandler::class,
                 'allowed_methods' => ['POST']
             ]
         ];

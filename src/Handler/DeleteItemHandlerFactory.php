@@ -6,17 +6,17 @@ use Doctrine\ORM\EntityManagerInterface;
 use Interop\Container\ContainerInterface;
 use MedisDemoApp\Service\Item\FindItemByUuidInterface;
 
-class UpdateItemHandlerFactory
+class DeleteItemHandlerFactory
 {
     /**
      * @param ContainerInterface $container
-     * @return UpdateItemHandler
+     * @return DeleteItemHandler
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container) : UpdateItemHandler
+    public function __invoke(ContainerInterface $container) : DeleteItemHandler
     {
-        return new UpdateItemHandler(
+        return new DeleteItemHandler(
             $container->get(FindItemByUuidInterface::class),
             $container->get(EntityManagerInterface::class)
         );
